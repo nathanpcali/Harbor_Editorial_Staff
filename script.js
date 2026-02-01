@@ -85,7 +85,7 @@ class TeamManager {
 
     // Load team members from Firebase or localStorage fallback
     async loadFromStorage() {
-        const DATA_VERSION = '2.4'; // Increment this when structure changes significantly
+        const DATA_VERSION = '2.5'; // Increment this when structure changes significantly
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
@@ -239,7 +239,6 @@ class TeamManager {
 
         // Add EPs if they don't exist
         const epMappings = [
-            { id: '61', name: 'Jesse Schwartz', title: 'EP', pairedWith: '8', reportsTo: '1', position: 'left' },
             { id: '52', name: 'EP - Aaron Porzel', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'left' },
             { id: '58', name: 'Lauren Shawe', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'right' },
             { id: '53', name: 'EP - Art Castle', title: 'EP', pairedWith: '4', reportsTo: '1' },
@@ -372,30 +371,11 @@ class TeamManager {
             needsUpdate = true;
         }
         
-        // Ensure Jesse Schwartz is set up as EP paired with Nate Cali
-        const jesseSchwartz = memberMap.get('61');
-        if (jesseSchwartz && jesseSchwartz.name === 'Jesse Schwartz') {
-            // Update to be EP paired with Nate Cali
-            if (jesseSchwartz.pairedWith !== '8' || jesseSchwartz.reportsTo !== '1' || jesseSchwartz.title !== 'EP') {
-                jesseSchwartz.pairedWith = '8';
-                jesseSchwartz.reportsTo = '1';
-                jesseSchwartz.title = 'EP';
-                jesseSchwartz.position = 'left';
-                needsUpdate = true;
-            }
-        } else {
-            // Check if Jesse Schwartz exists with a different ID or name
-            const jesseSchwartzAlt = members.find(m => m.name && m.name.toLowerCase().includes('jesse schwartz'));
-            if (jesseSchwartzAlt) {
-                // Update existing Jesse Schwartz to be EP for Nate Cali
-                jesseSchwartzAlt.id = '61';
-                jesseSchwartzAlt.name = 'Jesse Schwartz';
-                jesseSchwartzAlt.title = 'EP';
-                jesseSchwartzAlt.pairedWith = '8';
-                jesseSchwartzAlt.reportsTo = '1';
-                jesseSchwartzAlt.position = 'left';
-                needsUpdate = true;
-            }
+        // Remove Jesse Schwartz if present
+        const jesseSchwartzIndex = members.findIndex(m => m.id === '61' || (m.name && m.name.toLowerCase().includes('jesse schwartz')));
+        if (jesseSchwartzIndex !== -1) {
+            members.splice(jesseSchwartzIndex, 1);
+            needsUpdate = true;
         }
 
         // Save if any changes were made
@@ -413,7 +393,6 @@ class TeamManager {
         return [
             // Top level - ECD, then CDs with their EPs
             { id: '1', name: 'Bryan Cook', title: 'ECD', photo: 'assets/merge-3ba0a838-b3c6-4267-bf67-a105bc0779fa.png', notes: '', links: [], reportsTo: null },
-            { id: '61', name: 'Jesse Schwartz', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '8', position: 'left' },
             // Second level - report to top level
             // EPs (Executive Producers) - positioned to the left of CDs
             { id: '52', name: 'EP - Aaron Porzel', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '3', position: 'left' },
@@ -482,7 +461,7 @@ class TeamManager {
 
     // Save team members to storage (Firebase or localStorage fallback)
     async saveToStorage() {
-        const DATA_VERSION = '2.4'; // Must match version in loadFromStorage
+        const DATA_VERSION = '2.5'; // Must match version in loadFromStorage
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
