@@ -85,7 +85,7 @@ class TeamManager {
 
     // Load team members from Firebase or localStorage fallback
     async loadFromStorage() {
-        const DATA_VERSION = '2.2'; // Increment this when structure changes significantly
+        const DATA_VERSION = '2.3'; // Increment this when structure changes significantly
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
@@ -193,6 +193,22 @@ class TeamManager {
         const memberMap = new Map();
         members.forEach(m => memberMap.set(m.id, m));
 
+        // Ensure Bryan Cook (ECD) exists - add if missing
+        const bryanCook = memberMap.get('1');
+        if (!bryanCook || bryanCook.name !== 'Bryan Cook') {
+            members.unshift({
+                id: '1',
+                name: 'Bryan Cook',
+                title: 'ECD',
+                photo: '',
+                notes: '',
+                links: [],
+                reportsTo: null
+            });
+            memberMap.set('1', members[0]);
+            needsUpdate = true;
+        }
+
         // Remove EP - Bryan Cook if it exists (should not be there)
         const epBryanCook = memberMap.get('51');
         if (epBryanCook && epBryanCook.name === 'EP - Bryan Cook') {
@@ -215,6 +231,7 @@ class TeamManager {
 
         // Add EPs if they don't exist
         const epMappings = [
+            { id: '62', name: 'EP - Bryan Cook', title: 'EP', pairedWith: '1', reportsTo: null, position: 'left' },
             { id: '61', name: 'Jesse Schwartz', title: 'EP', pairedWith: '8', reportsTo: '1', position: 'left' },
             { id: '52', name: 'EP - Aaron Porzel', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'left' },
             { id: '58', name: 'Lauren Shawe', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'right' },
@@ -387,9 +404,10 @@ class TeamManager {
     // Get initial team members from organizational chart with reporting relationships
     getInitialTeamMembers() {
         return [
-            // Top level - no reportsTo
-            { id: '61', name: 'Jesse Schwartz', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '8', position: 'left' },
+            // Top level - ECD with EP, then CDs with their EPs
+            { id: '62', name: 'EP - Bryan Cook', title: 'EP', photo: '', notes: '', links: [], reportsTo: null, pairedWith: '1', position: 'left' },
             { id: '1', name: 'Bryan Cook', title: 'ECD', photo: '', notes: '', links: [], reportsTo: null },
+            { id: '61', name: 'Jesse Schwartz', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '8', position: 'left' },
             // Second level - report to top level
             // EPs (Executive Producers) - positioned to the left of CDs
             { id: '52', name: 'EP - Aaron Porzel', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '3', position: 'left' },
@@ -458,7 +476,7 @@ class TeamManager {
 
     // Save team members to storage (Firebase or localStorage fallback)
     async saveToStorage() {
-        const DATA_VERSION = '2.2'; // Must match version in loadFromStorage
+        const DATA_VERSION = '2.3'; // Must match version in loadFromStorage
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
@@ -1097,8 +1115,11 @@ class TeamManager {
         // Sort all children recursively by title priority
         this.sortHierarchyRecursive(rootMembers);
         
-        // For level 0, sort to ensure EPs appear with their paired members
+        // For level 0, sort to ensure ECD (Bryan Cook) is first, then EPs appear with their paired members
         rootMembers.sort((a, b) => {
+            // ECD (id 1) always first at root level
+            if (a.id === '1') return -1;
+            if (b.id === '1') return 1;
             // If a is an EP paired with b, a should come first
             if (a.pairedWith === b.id) {
                 return -1;
@@ -1226,9 +1247,10 @@ class TeamManager {
                         processed.add(pairedEP.id);
                     }
                 } else {
-                    // Regular member without EP pair
+                    // Regular member without EP pair (e.g. Bryan Cook ECD at top level)
                     const teamId = member.id;
-                    html += `<div class="org-node ${teamId ? 'team-' + teamId : ''}" data-team-id="${teamId || ''}">`;
+                    const isRootLevel = level === 0;
+                    html += `<div class="org-node ${isRootLevel ? 'root-node' : ''} ${teamId ? 'team-' + teamId : ''}" data-team-id="${teamId || ''}">`;
                     html += this.createMemberCard(member, true);
                     
                     if (member.children && member.children.length > 0) {
