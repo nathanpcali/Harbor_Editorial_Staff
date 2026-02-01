@@ -1,0 +1,14 @@
+---
+description: Ask about pushing changes to GitHub after edits
+alwaysApply: true
+---
+
+# GitHub Push Reminder
+
+When the user makes changes to this project (harbor-team-management / Harbor Editorial Staff):
+
+1. **After completing edits**, ask: "Should I push these changes to GitHub?"
+2. If the user says yes, commit and push to the Harbor_Editorial_Staff remote.
+3. If the user says no, do not push.
+
+This applies to any code changes in this workspace.
