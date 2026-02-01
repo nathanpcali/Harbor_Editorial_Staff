@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Management - Harbor Editorial</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+                <span class="harbor-text clickable-logo" id="resetZoomLogo">2026 HARBOR EDITORIAL TEAM</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="moveMemberToggle">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Move Member</span>
+                    </label>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search team member..." autocomplete="off">
+                    <div id="searchResults" class="search-results"></div>
+                </div>
+                <div class="zoom-controls">
+                    <button class="btn-secondary btn-small" id="zoomOutBtn" title="Zoom Out">−</button>
+                    <span id="zoomLevel" class="zoom-level">100%</span>
+                    <button class="btn-secondary btn-small" id="zoomInBtn" title="Zoom In">+</button>
+                    <button class="btn-secondary btn-small" id="resetZoomBtn" title="Reset Zoom">Reset</button>
+                </div>
+                <button class="btn-primary" id="addMemberBtn">+ Add Team Member</button>
+            </div>
+        </header>
+
+        <div id="orgChartContainer" class="org-chart-container">
+            <div id="teamGrid" class="team-grid">
+                <!-- Team member cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <p>No team members yet. Click "Add Team Member" to get started.</p>
+        </div>
+    </div>
+
+    <!-- Add/Edit Member Modal -->
+    <div id="memberModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Team Member</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="memberForm">
+                <input type="hidden" id="memberId">
+                
+                <div class="form-group">
+                    <label for="memberName">Name *</label>
+                    <input type="text" id="memberName" required placeholder="Enter team member name">
+                </div>
+
+                <div class="form-group">
+                    <label for="memberTitle">Title</label>
+                    <input type="text" id="memberTitle" placeholder="Enter job title (e.g., Creative Director, Editor)">
+                </div>
+
+                <div class="form-group" id="cdSelectionGroup" style="display: none;">
+                    <label for="memberCD">Reports To (Creative Director)</label>
+                    <select id="memberCD">
+                        <option value="">Select a Creative Director...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="memberPhoto">Profile Photo URL</label>
+                    <input type="url" id="memberPhoto" placeholder="https://example.com/photo.jpg">
+                    <small>Or upload an image file</small>
+                    <input type="file" id="photoUpload" accept="image/*" style="margin-top: 8px;">
+                </div>
+
+                <div class="form-group">
+                    <label for="memberNotes">Notes</label>
+                    <textarea id="memberNotes" rows="4" placeholder="Add notes about this team member..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>REEL</label>
+                    <div id="linksContainer">
+                        <!-- Links will be dynamically added here -->
+                    </div>
+                    <button type="button" class="btn-secondary btn-small" id="addLinkBtn">+ Add Link</button>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Member Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="detailName"></h2>
+                <span class="close-detail">&times;</span>
+            </div>
+            <div id="detailContent">
+                <!-- Detail content will be dynamically inserted -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="editMemberBtn">Edit</button>
+                <button class="btn-danger" id="deleteMemberBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal for Move Member -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Enter Password</h2>
+                <span class="close-password">&times;</span>
+            </div>
+            <div style="padding: 30px;">
+                <div class="form-group">
+                    <label for="passwordInput">Password Required</label>
+                    <input type="password" id="passwordInput" placeholder="Enter password..." autocomplete="off">
+                    <p id="passwordError" style="color: #fc8181; font-size: 12px; margin-top: 8px; display: none;">Incorrect password. Please try again.</p>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelPasswordBtn">Cancel</button>
+                    <button type="button" class="btn-primary" id="submitPasswordBtn">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Firebase after config is loaded
+        if (typeof firebaseConfig !== 'undefined') {
+            firebase.initializeApp(firebaseConfig);
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
+

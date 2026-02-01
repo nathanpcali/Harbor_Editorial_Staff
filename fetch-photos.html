@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Team Photos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .photo-item {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            background: white;
+        }
+        .photo-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .photo-item input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Team Photo Fetcher</h1>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Open the Readymag page: <a href="https://readymag.website/u88304068/5625493/10/" target="_blank">https://readymag.website/u88304068/5625493/10/</a></li>
+                <li>Right-click on each person's photo and select "Copy Image Address" or "Copy Image URL"</li>
+                <li>Paste the URL in the corresponding field below</li>
+                <li>Click "Update All Photos" to save to localStorage</li>
+            </ol>
+        </div>
+
+        <div id="photoGrid" class="photo-grid">
+            <!-- Photo inputs will be generated here -->
+        </div>
+
+        <div>
+            <button onclick="updateAllPhotos()">Update All Photos</button>
+            <button onclick="clearAllPhotos()">Clear All Photos</button>
+            <button onclick="exportData()">Export Data</button>
+        </div>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        // Team members list
+        const teamMembers = [
+            { id: '1', name: 'Bryan Cook', title: 'ECD' },
+            { id: '3', name: 'Aaron Porzel', title: 'CD' },
+            { id: '4', name: 'Art Castle', title: 'CD' },
+            { id: '5', name: 'Jesse Thompson', title: 'CD' },
+            { id: '6', name: 'Jefferson Chaney', title: 'CD' },
+            { id: '7', name: 'Justin Sirizzotti', title: 'ACD' },
+            { id: '8', name: 'Nate Cali', title: 'CD' },
+            { id: '9', name: 'Ben Reesing', title: 'Senior Editor' },
+            { id: '10', name: 'Paul Oh', title: 'Editor' },
+            { id: '11', name: 'Vicente Lopez', title: 'Editor' },
+            { id: '12', name: 'Lissette Schuster', title: 'Editor' },
+            { id: '13', name: 'Arianna Nasi', title: 'Editor' },
+            { id: '14', name: 'Greg Somerlot', title: 'Senior Editor' },
+            { id: '15', name: 'Luke Sloma', title: 'Senior Editor' },
+            { id: '16', name: 'Ryan Linich', title: 'Editor' },
+            { id: '17', name: 'Bert Cambridge', title: 'Senior Editor' },
+            { id: '18', name: 'Dave Bauer', title: 'Senior Editor' },
+            { id: '19', name: 'Craig Holzer', title: 'Senior Editor' },
+            { id: '20', name: 'Dana Apuzzo', title: 'Senior Editor' },
+            { id: '21', name: 'Josh Moise', title: 'Senior Editor' },
+            { id: '22', name: 'Vic Barczyk', title: 'Senior Editor' },
+            { id: '23', name: 'Quenton Jones', title: 'Senior Editor' },
+            { id: '24', name: 'Cassandra Tyler', title: 'Senior Editor' },
+            { id: '25', name: 'Kate Hershey', title: 'AE' },
+            { id: '26', name: 'Karla Llompart', title: 'Editor' },
+            { id: '27', name: 'Stephen Noll', title: 'Editor' },
+            { id: '28', name: 'John Gerbec', title: 'Senior Editor' },
+            { id: '29', name: 'Joe Duva', title: 'AE' },
+            { id: '30', name: 'Julia Marshall', title: 'Editor' },
+            { id: '31', name: 'Chris Fontes', title: 'AE' },
+            { id: '32', name: 'Vanessa Aoki', title: 'Editor' },
+            { id: '33', name: 'Thomas Irreno Pinilla', title: 'PGD Editor' },
+            { id: '34', name: 'Luke Nelson', title: 'AE' },
+            { id: '35', name: 'Rob Sheppard', title: 'Editor' },
+            { id: '36', name: 'Annie Kalfas', title: 'Associate Editor' },
+            { id: '37', name: 'Jacob Fagliano', title: 'Editor' },
+            { id: '38', name: 'Louie LaFleur', title: 'Editor' },
+            { id: '39', name: 'Shane Scherholz', title: 'Junior Editor' },
+            { id: '40', name: 'Kevin Curran', title: 'Editor' },
+            { id: '41', name: 'Manuel Pimentel', title: 'PGD Editor' },
+            { id: '42', name: 'Victoria Villa', title: 'AE' },
+            { id: '43', name: 'Cara Ross', title: 'Editor' },
+            { id: '44', name: 'Jack Cronin', title: 'Associate Editor' },
+            { id: '45', name: 'Steve Stanton', title: 'Editor' },
+            { id: '46', name: 'Ryan Quinlan', title: 'AE' },
+            { id: '47', name: 'Nancy Zhong', title: 'Editor' },
+            { id: '48', name: 'Santiago Vilabano', title: 'PGD Editor' },
+            { id: '49', name: 'Christian Cornejo', title: 'AE' },
+            { id: '50', name: 'Steven Barber', title: 'AE' },
+            { id: '51', name: 'Matt Matsil', title: 'AE' }
+        ];
+
+        // Load existing data
+        function loadExistingData() {
+            const stored = localStorage.getItem('harborTeamMembers');
+            if (stored) {
+                return JSON.parse(stored);
+            }
+            return null;
+        }
+
+        // Initialize photo grid
+        function initPhotoGrid() {
+            const grid = document.getElementById('photoGrid');
+            const existingData = loadExistingData();
+            const dataMap = {};
+            
+            if (existingData) {
+                existingData.forEach(member => {
+                    dataMap[member.id] = member;
+                });
+            }
+
+            teamMembers.forEach(member => {
+                const existing = dataMap[member.id] || {};
+                const photoUrl = existing.photo || '';
+                
+                const item = document.createElement('div');
+                item.className = 'photo-item';
+                item.innerHTML = `
+                    <h4>${member.name}</h4>
+                    <p style="font-size: 12px; color: #666; margin: 5px 0;">${member.title}</p>
+                    ${photoUrl ? `<img src="${photoUrl}" alt="${member.name}" onerror="this.style.display='none'">` : '<div style="height: 200px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">No photo</div>'}
+                    <input type="url" 
+                           id="photo-${member.id}" 
+                           placeholder="Paste image URL here" 
+                           value="${photoUrl}"
+                           onchange="previewPhoto('${member.id}', this.value)">
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        // Preview photo
+        function previewPhoto(id, url) {
+            if (url) {
+                const item = document.querySelector(`#photo-${id}`).closest('.photo-item');
+                const img = item.querySelector('img') || item.querySelector('div');
+                if (img.tagName === 'IMG') {
+                    img.src = url;
+                } else {
+                    img.outerHTML = `<img src="${url}" alt="Preview" onerror="this.style.display='none'; this.outerHTML='<div style=\\'height: 200px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;\\'>Invalid URL</div>'">`;
+                }
+            }
+        }
+
+        // Update all photos
+        function updateAllPhotos() {
+            const existingData = loadExistingData();
+            if (!existingData) {
+                showStatus('No existing team data found. Please use the main app first.', 'error');
+                return;
+            }
+
+            const dataMap = {};
+            existingData.forEach(member => {
+                dataMap[member.id] = member;
+            });
+
+            let updated = 0;
+            teamMembers.forEach(member => {
+                const photoInput = document.getElementById(`photo-${member.id}`);
+                const photoUrl = photoInput.value.trim();
+                
+                if (photoUrl && dataMap[member.id]) {
+                    dataMap[member.id].photo = photoUrl;
+                    updated++;
+                }
+            });
+
+            // Save back to localStorage
+            const updatedData = Object.values(dataMap);
+            localStorage.setItem('harborTeamMembers', JSON.stringify(updatedData));
+            
+            showStatus(`Successfully updated ${updated} team member photos!`, 'success');
+        }
+
+        // Clear all photos
+        function clearAllPhotos() {
+            if (confirm('Clear all photo URLs?')) {
+                teamMembers.forEach(member => {
+                    const input = document.getElementById(`photo-${member.id}`);
+                    if (input) input.value = '';
+                });
+                showStatus('Photo URLs cleared. Click "Update All Photos" to save.', 'success');
+            }
+        }
+
+        // Export data
+        function exportData() {
+            const existingData = loadExistingData();
+            if (existingData) {
+                const dataStr = JSON.stringify(existingData, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'harbor-team-data.json';
+                a.click();
+                URL.revokeObjectURL(url);
+                showStatus('Data exported successfully!', 'success');
+            } else {
+                showStatus('No data to export.', 'error');
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            setTimeout(() => {
+                status.className = 'status';
+            }, 5000);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initPhotoGrid);
+    </script>
+</body>
+</html>
+
+
