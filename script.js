@@ -336,6 +336,18 @@ class TeamManager {
             }
         }
         
+        // Update Luke Nelson and Victoria Villa to Associate Editor
+        const lukeNelson = memberMap.get('34');
+        if (lukeNelson && lukeNelson.name === 'Luke Nelson' && lukeNelson.title !== 'Associate Editor') {
+            lukeNelson.title = 'Associate Editor';
+            needsUpdate = true;
+        }
+        const victoriaVilla = memberMap.get('42');
+        if (victoriaVilla && victoriaVilla.name === 'Victoria Villa' && victoriaVilla.title !== 'Associate Editor') {
+            victoriaVilla.title = 'Associate Editor';
+            needsUpdate = true;
+        }
+        
         // Ensure Jesse Schwartz is set up as EP paired with Nate Cali
         const jesseSchwartz = memberMap.get('61');
         if (jesseSchwartz && jesseSchwartz.name === 'Jesse Schwartz') {
@@ -419,7 +431,7 @@ class TeamManager {
             { id: '31', name: 'Chris Fontes', title: 'AE', photo: '', notes: '', links: [], reportsTo: '30' },
             { id: '32', name: 'Vanessa Aoki', title: 'Editor', photo: '', notes: '', links: [], reportsTo: '21' },
             { id: '33', name: 'Thomas Irreno Pinilla', title: 'PGD Editor', photo: '', notes: '', links: [], reportsTo: '22' },
-            { id: '34', name: 'Luke Nelson', title: 'AE', photo: '', notes: '', links: [], reportsTo: '23' },
+            { id: '34', name: 'Luke Nelson', title: 'Associate Editor', photo: '', notes: '', links: [], reportsTo: '23' },
             // Fifth level
             { id: '35', name: 'Rob Sheppard', title: 'Editor', photo: '', notes: '', links: [], reportsTo: '24' },
             { id: '36', name: 'Annie Kalfas', title: 'Associate Editor', photo: '', notes: '', links: [], reportsTo: '25' },
@@ -428,7 +440,7 @@ class TeamManager {
             { id: '39', name: 'Shane Scherholz', title: 'Junior Editor', photo: '', notes: '', links: [], reportsTo: '6' },
             { id: '40', name: 'Kevin Curran', title: 'Editor', photo: '', notes: '', links: [], reportsTo: '19' },
             { id: '41', name: 'Manuel Pimentel', title: 'PGD Editor', photo: '', notes: '', links: [], reportsTo: '33' },
-            { id: '42', name: 'Victoria Villa', title: 'AE', photo: '', notes: '', links: [], reportsTo: '34' },
+            { id: '42', name: 'Victoria Villa', title: 'Associate Editor', photo: '', notes: '', links: [], reportsTo: '34' },
             // Sixth level
             { id: '43', name: 'Cara Ross', title: 'Editor', photo: '', notes: '', links: [], reportsTo: '35' },
             { id: '44', name: 'Jack Cronin', title: 'Associate Editor', photo: '', notes: '', links: [], reportsTo: '36' },
