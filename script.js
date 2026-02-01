@@ -85,7 +85,7 @@ class TeamManager {
 
     // Load team members from Firebase or localStorage fallback
     async loadFromStorage() {
-        const DATA_VERSION = '2.6'; // Increment this when structure changes significantly
+        const DATA_VERSION = '2.7'; // Increment this when structure changes significantly
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
@@ -118,6 +118,14 @@ class TeamManager {
                             return initialMembers;
                         }
                         
+                        // Check if ECD (Bryan Cook and Jesse Schwartz, ID: 1) exists - if not, clear and reload
+                        const hasECD = members.some(m => m.id === '1');
+                        if (!hasECD) {
+                            console.log('ECD not found in data. Refreshing from source...');
+                            const initialMembers = this.getInitialTeamMembers();
+                            await this.saveToStorage();
+                            return initialMembers;
+                        }
                         // Check if Lauren Shawe (ID: 58) exists - if not, clear and reload
                         const hasLaurenShawe = members.some(m => m.id === '58');
                         if (!hasLaurenShawe) {
@@ -170,6 +178,13 @@ class TeamManager {
                 return this.getInitialTeamMembers();
             }
             
+            // Check if ECD (Bryan Cook and Jesse Schwartz, ID: 1) exists - if not, clear and reload
+            const hasECD = members.some(m => m.id === '1');
+            if (!hasECD) {
+                console.log('ECD not found in data. Clearing localStorage and reloading...');
+                localStorage.removeItem('harborTeamMembers');
+                return this.getInitialTeamMembers();
+            }
             // Check if Lauren Shawe (ID: 58) exists - if not, clear and reload
             const hasLaurenShawe = members.some(m => m.id === '58');
             if (!hasLaurenShawe) {
@@ -375,8 +390,8 @@ class TeamManager {
             needsUpdate = true;
         }
         
-        // Remove Jesse Schwartz if present
-        const jesseSchwartzIndex = members.findIndex(m => m.id === '61' || (m.name && m.name.toLowerCase().includes('jesse schwartz')));
+        // Remove Jesse Schwartz (id 61 only - the separate EP entry, NOT "Bryan Cook and Jesse Schwartz" id 1)
+        const jesseSchwartzIndex = members.findIndex(m => m.id === '61');
         if (jesseSchwartzIndex !== -1) {
             members.splice(jesseSchwartzIndex, 1);
             needsUpdate = true;
@@ -465,7 +480,7 @@ class TeamManager {
 
     // Save team members to storage (Firebase or localStorage fallback)
     async saveToStorage() {
-        const DATA_VERSION = '2.6'; // Must match version in loadFromStorage
+        const DATA_VERSION = '2.7'; // Must match version in loadFromStorage
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
