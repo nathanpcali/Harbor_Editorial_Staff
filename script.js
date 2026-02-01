@@ -85,7 +85,7 @@ class TeamManager {
 
     // Load team members from Firebase or localStorage fallback
     async loadFromStorage() {
-        const DATA_VERSION = '2.3'; // Increment this when structure changes significantly
+        const DATA_VERSION = '2.4'; // Increment this when structure changes significantly
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
@@ -209,10 +209,18 @@ class TeamManager {
             needsUpdate = true;
         }
 
-        // Remove EP - Bryan Cook if it exists (should not be there)
-        const epBryanCook = memberMap.get('51');
-        if (epBryanCook && epBryanCook.name === 'EP - Bryan Cook') {
+        // Remove EP - Bryan Cook if it exists (id 51 or 62)
+        const epBryanCook51 = memberMap.get('51');
+        if (epBryanCook51 && epBryanCook51.name === 'EP - Bryan Cook') {
             const index = members.findIndex(m => m.id === '51' && m.name === 'EP - Bryan Cook');
+            if (index !== -1) {
+                members.splice(index, 1);
+                needsUpdate = true;
+            }
+        }
+        const epBryanCook62 = memberMap.get('62');
+        if (epBryanCook62 && epBryanCook62.name === 'EP - Bryan Cook') {
+            const index = members.findIndex(m => m.id === '62' && m.name === 'EP - Bryan Cook');
             if (index !== -1) {
                 members.splice(index, 1);
                 needsUpdate = true;
@@ -231,7 +239,6 @@ class TeamManager {
 
         // Add EPs if they don't exist
         const epMappings = [
-            { id: '62', name: 'EP - Bryan Cook', title: 'EP', pairedWith: '1', reportsTo: null, position: 'left' },
             { id: '61', name: 'Jesse Schwartz', title: 'EP', pairedWith: '8', reportsTo: '1', position: 'left' },
             { id: '52', name: 'EP - Aaron Porzel', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'left' },
             { id: '58', name: 'Lauren Shawe', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'right' },
@@ -404,9 +411,8 @@ class TeamManager {
     // Get initial team members from organizational chart with reporting relationships
     getInitialTeamMembers() {
         return [
-            // Top level - ECD with EP, then CDs with their EPs
-            { id: '62', name: 'EP - Bryan Cook', title: 'EP', photo: '', notes: '', links: [], reportsTo: null, pairedWith: '1', position: 'left' },
-            { id: '1', name: 'Bryan Cook', title: 'ECD', photo: '', notes: '', links: [], reportsTo: null },
+            // Top level - ECD, then CDs with their EPs
+            { id: '1', name: 'Bryan Cook', title: 'ECD', photo: 'assets/merge-3ba0a838-b3c6-4267-bf67-a105bc0779fa.png', notes: '', links: [], reportsTo: null },
             { id: '61', name: 'Jesse Schwartz', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '8', position: 'left' },
             // Second level - report to top level
             // EPs (Executive Producers) - positioned to the left of CDs
@@ -476,7 +482,7 @@ class TeamManager {
 
     // Save team members to storage (Firebase or localStorage fallback)
     async saveToStorage() {
-        const DATA_VERSION = '2.3'; // Must match version in loadFromStorage
+        const DATA_VERSION = '2.4'; // Must match version in loadFromStorage
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
