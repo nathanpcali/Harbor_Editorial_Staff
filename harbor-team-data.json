@@ -6,8 +6,8 @@
     "photo": "",
     "notes": "",
     "links": [],
-    "reportsTo": null,
-    "pairedWith": "1",
+    "reportsTo": "1",
+    "pairedWith": "8",
     "position": "left"
   },
   {

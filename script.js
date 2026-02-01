@@ -85,7 +85,7 @@ class TeamManager {
 
     // Load team members from Firebase or localStorage fallback
     async loadFromStorage() {
-        const DATA_VERSION = '2.1'; // Increment this when structure changes significantly
+        const DATA_VERSION = '2.2'; // Increment this when structure changes significantly
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
@@ -215,7 +215,7 @@ class TeamManager {
 
         // Add EPs if they don't exist
         const epMappings = [
-            { id: '61', name: 'Jesse Schwartz', title: 'EP', pairedWith: '1', reportsTo: null, position: 'left' },
+            { id: '61', name: 'Jesse Schwartz', title: 'EP', pairedWith: '8', reportsTo: '1', position: 'left' },
             { id: '52', name: 'EP - Aaron Porzel', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'left' },
             { id: '58', name: 'Lauren Shawe', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'right' },
             { id: '53', name: 'EP - Art Castle', title: 'EP', pairedWith: '4', reportsTo: '1' },
@@ -336,13 +336,13 @@ class TeamManager {
             }
         }
         
-        // Ensure Jesse Schwartz is set up as EP paired with Bryan Cook
+        // Ensure Jesse Schwartz is set up as EP paired with Nate Cali
         const jesseSchwartz = memberMap.get('61');
         if (jesseSchwartz && jesseSchwartz.name === 'Jesse Schwartz') {
-            // Update to be EP paired with Bryan Cook
-            if (jesseSchwartz.pairedWith !== '1' || jesseSchwartz.reportsTo !== null || jesseSchwartz.title !== 'EP') {
-                jesseSchwartz.pairedWith = '1';
-                jesseSchwartz.reportsTo = null;
+            // Update to be EP paired with Nate Cali
+            if (jesseSchwartz.pairedWith !== '8' || jesseSchwartz.reportsTo !== '1' || jesseSchwartz.title !== 'EP') {
+                jesseSchwartz.pairedWith = '8';
+                jesseSchwartz.reportsTo = '1';
                 jesseSchwartz.title = 'EP';
                 jesseSchwartz.position = 'left';
                 needsUpdate = true;
@@ -351,12 +351,12 @@ class TeamManager {
             // Check if Jesse Schwartz exists with a different ID or name
             const jesseSchwartzAlt = members.find(m => m.name && m.name.toLowerCase().includes('jesse schwartz'));
             if (jesseSchwartzAlt) {
-                // Update existing Jesse Schwartz to be EP for Bryan Cook
+                // Update existing Jesse Schwartz to be EP for Nate Cali
                 jesseSchwartzAlt.id = '61';
                 jesseSchwartzAlt.name = 'Jesse Schwartz';
                 jesseSchwartzAlt.title = 'EP';
-                jesseSchwartzAlt.pairedWith = '1';
-                jesseSchwartzAlt.reportsTo = null;
+                jesseSchwartzAlt.pairedWith = '8';
+                jesseSchwartzAlt.reportsTo = '1';
                 jesseSchwartzAlt.position = 'left';
                 needsUpdate = true;
             }
@@ -376,7 +376,7 @@ class TeamManager {
     getInitialTeamMembers() {
         return [
             // Top level - no reportsTo
-            { id: '61', name: 'Jesse Schwartz', title: 'EP', photo: '', notes: '', links: [], reportsTo: null, pairedWith: '1', position: 'left' },
+            { id: '61', name: 'Jesse Schwartz', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '8', position: 'left' },
             { id: '1', name: 'Bryan Cook', title: 'ECD', photo: '', notes: '', links: [], reportsTo: null },
             // Second level - report to top level
             // EPs (Executive Producers) - positioned to the left of CDs
@@ -446,7 +446,7 @@ class TeamManager {
 
     // Save team members to storage (Firebase or localStorage fallback)
     async saveToStorage() {
-        const DATA_VERSION = '2.1'; // Must match version in loadFromStorage
+        const DATA_VERSION = '2.2'; // Must match version in loadFromStorage
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
