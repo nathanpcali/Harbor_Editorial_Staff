@@ -716,43 +716,45 @@ class TeamManager {
         this.currentEditingId = null;
     }
 
-    // Populate CD dropdown with all Creative Directors
-    populateCDDropdown(selectElement) {
-        // Clear existing options except the first one
-        selectElement.innerHTML = '<option value="">Select a Creative Director...</option>';
+    // Populate Reports To dropdown with all team members
+    populateCDDropdown(selectElement, excludeId = null) {
+        selectElement.innerHTML = '<option value="">Select who they report to...</option>';
         
-        // Find all CDs, ACDs, and ECDs (Creative Directors, Associate Creative Directors, and Executive Creative Directors)
-        const cds = this.teamMembers.filter(member => {
-            const title = (member.title || '').toUpperCase();
-            return title === 'CD' || title === 'ACD' || title === 'ECD' || title.includes('CREATIVE DIRECTOR');
-        });
+        // Get all team members, excluding self if editing
+        let members = this.teamMembers;
+        if (excludeId) {
+            members = members.filter(m => m.id !== excludeId);
+        }
         
-        // Add each CD as an option
-        cds.forEach(cd => {
+        // Sort alphabetically by name
+        members = [...members].sort((a, b) => a.name.localeCompare(b.name));
+        
+        members.forEach(member => {
             const option = document.createElement('option');
-            option.value = cd.id;
-            option.textContent = cd.name;
+            option.value = member.id;
+            option.textContent = `${member.name}${member.title ? ` (${member.title})` : ''}`;
             selectElement.appendChild(option);
         });
     }
 
-    // Populate CD dropdown for detail modal
-    populateCDDropdownForDetail(selectElement, currentReportsTo) {
-        // Clear existing options
-        selectElement.innerHTML = '<option value="">Select a Creative Director...</option>';
+    // Populate Reports To dropdown for detail modal
+    populateCDDropdownForDetail(selectElement, currentReportsTo, excludeId = null) {
+        selectElement.innerHTML = '<option value="">Select who they report to...</option>';
         
-        // Find all CDs, ACDs, and ECDs (Creative Directors, Associate Creative Directors, and Executive Creative Directors)
-        const cds = this.teamMembers.filter(member => {
-            const title = (member.title || '').toUpperCase();
-            return title === 'CD' || title === 'ACD' || title === 'ECD' || title.includes('CREATIVE DIRECTOR');
-        });
+        // Get all team members, excluding self
+        let members = this.teamMembers;
+        if (excludeId) {
+            members = members.filter(m => m.id !== excludeId);
+        }
         
-        // Add each CD as an option
-        cds.forEach(cd => {
+        // Sort alphabetically by name
+        members = [...members].sort((a, b) => a.name.localeCompare(b.name));
+        
+        members.forEach(member => {
             const option = document.createElement('option');
-            option.value = cd.id;
-            option.textContent = cd.name;
-            if (cd.id === currentReportsTo) {
+            option.value = member.id;
+            option.textContent = `${member.name}${member.title ? ` (${member.title})` : ''}`;
+            if (member.id === currentReportsTo) {
                 option.selected = true;
             }
             selectElement.appendChild(option);
@@ -897,7 +899,7 @@ class TeamManager {
                 <div class="detail-section">
                     <h3>Reports To</h3>
                     <select id="detailCDSelect" class="detail-select">
-                        <option value="">Select a Creative Director...</option>
+                        <option value="">Select who they report to...</option>
                     </select>
                     <p class="detail-current-cd">Current: ${this.escapeHtml(currentCDName)}</p>
                 </div>
@@ -946,7 +948,7 @@ class TeamManager {
         if (!isECD && !isEP) {
             const cdSelect = document.getElementById('detailCDSelect');
             if (cdSelect) {
-                this.populateCDDropdownForDetail(cdSelect, member.reportsTo);
+                this.populateCDDropdownForDetail(cdSelect, member.reportsTo, member.id);
                 
                 // Add change event listener
                 cdSelect.addEventListener('change', (e) => {
