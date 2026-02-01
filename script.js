@@ -85,7 +85,7 @@ class TeamManager {
 
     // Load team members from Firebase or localStorage fallback
     async loadFromStorage() {
-        const DATA_VERSION = '2.5'; // Increment this when structure changes significantly
+        const DATA_VERSION = '2.6'; // Increment this when structure changes significantly
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
@@ -193,12 +193,16 @@ class TeamManager {
         const memberMap = new Map();
         members.forEach(m => memberMap.set(m.id, m));
 
-        // Ensure Bryan Cook (ECD) exists - add if missing
+        // Ensure Bryan Cook and Jesse Schwartz (ECD) exists - add if missing, or update name
         const bryanCook = memberMap.get('1');
-        if (!bryanCook || bryanCook.name !== 'Bryan Cook') {
+        if (bryanCook && bryanCook.name === 'Bryan Cook') {
+            bryanCook.name = 'Bryan Cook and Jesse Schwartz';
+            needsUpdate = true;
+        }
+        if (!bryanCook || bryanCook.name !== 'Bryan Cook and Jesse Schwartz') {
             members.unshift({
                 id: '1',
-                name: 'Bryan Cook',
+                name: 'Bryan Cook and Jesse Schwartz',
                 title: 'ECD',
                 photo: '',
                 notes: '',
@@ -392,7 +396,7 @@ class TeamManager {
     getInitialTeamMembers() {
         return [
             // Top level - ECD, then CDs with their EPs
-            { id: '1', name: 'Bryan Cook', title: 'ECD', photo: 'assets/merge-3ba0a838-b3c6-4267-bf67-a105bc0779fa.png', notes: '', links: [], reportsTo: null },
+            { id: '1', name: 'Bryan Cook and Jesse Schwartz', title: 'ECD', photo: 'assets/merge-3ba0a838-b3c6-4267-bf67-a105bc0779fa.png', notes: '', links: [], reportsTo: null },
             // Second level - report to top level
             // EPs (Executive Producers) - positioned to the left of CDs
             { id: '52', name: 'EP - Aaron Porzel', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '3', position: 'left' },
@@ -461,7 +465,7 @@ class TeamManager {
 
     // Save team members to storage (Firebase or localStorage fallback)
     async saveToStorage() {
-        const DATA_VERSION = '2.5'; // Must match version in loadFromStorage
+        const DATA_VERSION = '2.6'; // Must match version in loadFromStorage
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
@@ -1100,7 +1104,7 @@ class TeamManager {
         // Sort all children recursively by title priority
         this.sortHierarchyRecursive(rootMembers);
         
-        // For level 0, sort to ensure ECD (Bryan Cook) is first, then EPs appear with their paired members
+        // For level 0, sort to ensure ECD (Bryan Cook and Jesse Schwartz) is first, then EPs appear with their paired members
         rootMembers.sort((a, b) => {
             // ECD (id 1) always first at root level
             if (a.id === '1') return -1;
@@ -1232,7 +1236,7 @@ class TeamManager {
                         processed.add(pairedEP.id);
                     }
                 } else {
-                    // Regular member without EP pair (e.g. Bryan Cook ECD at top level)
+                    // Regular member without EP pair (e.g. Bryan Cook and Jesse Schwartz ECD at top level)
                     const teamId = member.id;
                     const isRootLevel = level === 0;
                     html += `<div class="org-node ${isRootLevel ? 'root-node' : ''} ${teamId ? 'team-' + teamId : ''}" data-team-id="${teamId || ''}">`;
