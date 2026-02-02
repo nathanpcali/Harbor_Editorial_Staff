@@ -264,7 +264,7 @@ class TeamManager {
         const epMappings = [
             { id: '52', name: 'Jenny McDonald', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'left' },
             { id: '58', name: 'Lauren Shawe', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'right' },
-            { id: '53', name: 'EP - Art Castle', title: 'EP', pairedWith: '4', reportsTo: '1' },
+            { id: '53', name: 'Veronica Santana', title: 'EP', pairedWith: '4', reportsTo: '1' },
             { id: '54', name: 'EP - Jesse Thompson', title: 'EP', pairedWith: '5', reportsTo: '1' },
             { id: '55', name: 'EP - Jefferson Chaney', title: 'EP', pairedWith: '6', reportsTo: '1' },
             { id: '60', name: 'Greg Zimny', title: 'EP', pairedWith: '7', reportsTo: '1', position: 'left' }
@@ -388,6 +388,12 @@ class TeamManager {
             epAaronPorzel.name = 'Jenny McDonald';
             needsUpdate = true;
         }
+        // Update EP - Art Castle (id 53) to Veronica Santana
+        const epArtCastle = memberMap.get('53');
+        if (epArtCastle && epArtCastle.name === 'EP - Art Castle') {
+            epArtCastle.name = 'Veronica Santana';
+            needsUpdate = true;
+        }
         
         // Update Luke Nelson and Victoria Villa to Associate Editor
         const lukeNelson = memberMap.get('34');
@@ -428,7 +434,7 @@ class TeamManager {
             { id: '52', name: 'Jenny McDonald', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '3', position: 'left' },
             { id: '3', name: 'Aaron Porzel', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
             { id: '58', name: 'Lauren Shawe', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '3', position: 'right' },
-            { id: '53', name: 'EP - Art Castle', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '4' },
+            { id: '53', name: 'Veronica Santana', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '4' },
             { id: '4', name: 'Art Castle', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
             { id: '54', name: 'EP - Jesse Thompson', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '5' },
             { id: '5', name: 'Jesse Thompson', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
