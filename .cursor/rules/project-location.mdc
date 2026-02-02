@@ -1,0 +1,12 @@
+---
+description: Cursor projects are kept in Documents/Cursor folder
+alwaysApply: true
+---
+
+# Project Location Convention
+
+All Cursor projects are kept in `/Users/natecali/Documents/Cursor`.
+
+- When suggesting where to create new projects, use this folder
+- When organizing or moving project files, keep them under this path
+- This is the canonical location for all Cursor/development projects
