@@ -394,6 +394,18 @@ class TeamManager {
             epArtCastle.name = 'Veronica Santana';
             needsUpdate = true;
         }
+        // Update EP - Jesse Thompson (id 54) to Amanda Tibbits
+        const epJesseThompson = memberMap.get('54');
+        if (epJesseThompson && epJesseThompson.name === 'EP - Jesse Thompson') {
+            epJesseThompson.name = 'Amanda Tibbits';
+            needsUpdate = true;
+        }
+        // Update EP - Jefferson Chaney (id 55) to Janet Bess
+        const epJeffersonChaney = memberMap.get('55');
+        if (epJeffersonChaney && epJeffersonChaney.name === 'EP - Jefferson Chaney') {
+            epJeffersonChaney.name = 'Janet Bess';
+            needsUpdate = true;
+        }
         
         // Update Luke Nelson and Victoria Villa to Associate Editor
         const lukeNelson = memberMap.get('34');
