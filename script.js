@@ -265,7 +265,7 @@ class TeamManager {
             { id: '52', name: 'Jenny McDonald', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'left' },
             { id: '58', name: 'Lauren Shawe', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'right' },
             { id: '53', name: 'Veronica Santana', title: 'EP', pairedWith: '4', reportsTo: '1' },
-            { id: '54', name: 'EP - Jesse Thompson', title: 'EP', pairedWith: '5', reportsTo: '1' },
+            { id: '54', name: 'Amanda Tibbits', title: 'EP', pairedWith: '5', reportsTo: '1' },
             { id: '55', name: 'EP - Jefferson Chaney', title: 'EP', pairedWith: '6', reportsTo: '1' },
             { id: '60', name: 'Greg Zimny', title: 'EP', pairedWith: '7', reportsTo: '1', position: 'left' }
         ];
@@ -436,7 +436,7 @@ class TeamManager {
             { id: '58', name: 'Lauren Shawe', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '3', position: 'right' },
             { id: '53', name: 'Veronica Santana', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '4' },
             { id: '4', name: 'Art Castle', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
-            { id: '54', name: 'EP - Jesse Thompson', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '5' },
+            { id: '54', name: 'Amanda Tibbits', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '5' },
             { id: '5', name: 'Jesse Thompson', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
             { id: '55', name: 'EP - Jefferson Chaney', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '6' },
             { id: '6', name: 'Jefferson Chaney', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
