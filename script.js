@@ -214,6 +214,10 @@ class TeamManager {
             bryanCook.name = 'Bryan Cook and Jesse Schwartz';
             needsUpdate = true;
         }
+        if (bryanCook && bryanCook.name === 'Bryan Cook and Jesse Schwartz' && bryanCook.title !== 'ECD and EP') {
+            bryanCook.title = 'ECD and EP';
+            needsUpdate = true;
+        }
         if (!bryanCook || bryanCook.name !== 'Bryan Cook and Jesse Schwartz') {
             members.unshift({
                 id: '1',
@@ -258,7 +262,7 @@ class TeamManager {
 
         // Add EPs if they don't exist
         const epMappings = [
-            { id: '52', name: 'EP - Aaron Porzel', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'left' },
+            { id: '52', name: 'Jenny McDonald', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'left' },
             { id: '58', name: 'Lauren Shawe', title: 'EP', pairedWith: '3', reportsTo: '1', position: 'right' },
             { id: '53', name: 'EP - Art Castle', title: 'EP', pairedWith: '4', reportsTo: '1' },
             { id: '54', name: 'EP - Jesse Thompson', title: 'EP', pairedWith: '5', reportsTo: '1' },
@@ -378,6 +382,13 @@ class TeamManager {
             }
         }
         
+        // Update EP - Aaron Porzel (id 52) to Jenny McDonald
+        const epAaronPorzel = memberMap.get('52');
+        if (epAaronPorzel && epAaronPorzel.name === 'EP - Aaron Porzel') {
+            epAaronPorzel.name = 'Jenny McDonald';
+            needsUpdate = true;
+        }
+        
         // Update Luke Nelson and Victoria Villa to Associate Editor
         const lukeNelson = memberMap.get('34');
         if (lukeNelson && lukeNelson.name === 'Luke Nelson' && lukeNelson.title !== 'Associate Editor') {
@@ -411,10 +422,10 @@ class TeamManager {
     getInitialTeamMembers() {
         return [
             // Top level - ECD, then CDs with their EPs
-            { id: '1', name: 'Bryan Cook and Jesse Schwartz', title: 'ECD', photo: 'assets/merge-3ba0a838-b3c6-4267-bf67-a105bc0779fa.png', notes: '', links: [], reportsTo: null },
+            { id: '1', name: 'Bryan Cook and Jesse Schwartz', title: 'ECD and EP', photo: 'assets/merge-3ba0a838-b3c6-4267-bf67-a105bc0779fa.png', notes: '', links: [], reportsTo: null },
             // Second level - report to top level
             // EPs (Executive Producers) - positioned to the left of CDs
-            { id: '52', name: 'EP - Aaron Porzel', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '3', position: 'left' },
+            { id: '52', name: 'Jenny McDonald', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '3', position: 'left' },
             { id: '3', name: 'Aaron Porzel', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
             { id: '58', name: 'Lauren Shawe', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '3', position: 'right' },
             { id: '53', name: 'EP - Art Castle', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '4' },
