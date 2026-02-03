@@ -448,5 +448,14 @@
     "notes": "",
     "links": [],
     "reportsTo": "49"
+  },
+  {
+    "id": "61",
+    "name": "Charlotte Savage",
+    "title": "Senior Editor",
+    "photo": "assets/charlotte-savage.png",
+    "notes": "",
+    "links": [],
+    "reportsTo": "7"
   }
 ]

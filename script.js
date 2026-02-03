@@ -307,6 +307,23 @@ class TeamManager {
             }
         });
 
+        // Add Charlotte Savage (Senior Editor under Justin Sirizzotti, ID: 7) if not present
+        if (!memberMap.has('61')) {
+            if (memberMap.has('7')) {
+                members.push({
+                    id: '61',
+                    name: 'Charlotte Savage',
+                    title: 'Senior Editor',
+                    photo: 'assets/charlotte-savage.png',
+                    notes: '',
+                    links: [],
+                    reportsTo: '7'
+                });
+                memberMap.set('61', members[members.length - 1]);
+                needsUpdate = true;
+            }
+        }
+
         // Update Jefferson Chaney's team (ID: '6')
         const jeffersonChaneyId = '6';
         const jeffersonTeam = ['18', '28', '39', '47', '50']; // Dave Bauer, John Gerbec, Shane Scherholz, Nancy Zhong, Steven Barber
@@ -470,6 +487,7 @@ class TeamManager {
             { id: '20', name: 'Dana Apuzzo', title: 'Senior Editor', photo: '', notes: '', links: [], reportsTo: '7' },
             { id: '21', name: 'Josh Moise', title: 'Senior Editor', photo: '', notes: '', links: [], reportsTo: '7' },
             { id: '22', name: 'Vic Barczyk', title: 'Senior Editor', photo: '', notes: '', links: [], reportsTo: '7' },
+            { id: '61', name: 'Charlotte Savage', title: 'Senior Editor', photo: 'assets/charlotte-savage.png', notes: '', links: [], reportsTo: '7' },
             { id: '23', name: 'Quenton Jones', title: 'Senior Editor', photo: '', notes: '', links: [], reportsTo: '8' },
             // Fourth level
             { id: '24', name: 'Cassandra Tyler', title: 'Senior Editor', photo: '', notes: '', links: [], reportsTo: '14' },
