@@ -85,7 +85,7 @@ class TeamManager {
 
     // Load team members from Firebase or localStorage fallback
     async loadFromStorage() {
-        const DATA_VERSION = '2.7'; // Increment this when structure changes significantly
+        const DATA_VERSION = '2.8'; // Increment this when structure changes significantly
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
@@ -527,7 +527,7 @@ class TeamManager {
 
     // Save team members to storage (Firebase or localStorage fallback)
     async saveToStorage() {
-        const DATA_VERSION = '2.7'; // Must match version in loadFromStorage
+        const DATA_VERSION = '2.8'; // Must match version in loadFromStorage
         
         // Try Firebase first if available
         if (typeof firebase !== 'undefined' && firebase.firestore) {
