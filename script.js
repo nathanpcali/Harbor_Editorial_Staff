@@ -1659,7 +1659,13 @@ class TeamManager {
     }
 
     resetZoom() {
-        this.calculateOptimalZoom();
+        // Always reset to true 100% (zoomLevel = 1.0)
+        this.baseZoomLevel = 1.0;
+        this.zoomLevel = 1.0;
+        this.panX = 0;
+        this.panY = 0;
+        this.updateTransform();
+        this.updateZoomDisplay();
     }
 
     calculateOptimalZoom() {
