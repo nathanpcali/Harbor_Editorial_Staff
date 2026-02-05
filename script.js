@@ -344,6 +344,14 @@ class TeamManager {
                 needsUpdate = true;
             }
         }
+        // Update Nate Cali's title from CD to GCD (ID: '8')
+        const nateCali = memberMap.get('8');
+        if (nateCali && nateCali.name === 'Nate Cali') {
+            if (nateCali.title !== 'GCD') {
+                nateCali.title = 'GCD';
+                needsUpdate = true;
+            }
+        }
         
         // Update Justin Sirizzotti's team (ID: '7')
         // Craig Holzer reports to Justin Sirizzotti
@@ -471,7 +479,7 @@ class TeamManager {
             { id: '6', name: 'Jefferson Chaney', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
             { id: '60', name: 'Greg Zimny', title: 'EP', photo: '', notes: '', links: [], reportsTo: '1', pairedWith: '7', position: 'left' },
             { id: '7', name: 'Justin Sirizzotti', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
-            { id: '8', name: 'Nate Cali', title: 'CD', photo: '', notes: '', links: [], reportsTo: '1' },
+            { id: '8', name: 'Nate Cali', title: 'GCD', photo: '', notes: '', links: [], reportsTo: '1' },
             { id: '9', name: 'Ben Reesing', title: 'Senior Editor', photo: '', notes: '', links: [], reportsTo: '1' },
             { id: '10', name: 'Paul Oh', title: 'Editor', photo: '', notes: '', links: [], reportsTo: '1' },
             { id: '11', name: 'Vicente Lopez', title: 'Editor', photo: '', notes: '', links: [], reportsTo: '1' },
