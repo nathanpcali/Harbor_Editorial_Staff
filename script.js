@@ -1659,13 +1659,8 @@ class TeamManager {
     }
 
     resetZoom() {
-        // Always reset to true 100% (zoomLevel = 1.0)
-        this.baseZoomLevel = 1.0;
-        this.zoomLevel = 1.0;
-        this.panX = 0;
-        this.panY = 0;
-        this.updateTransform();
-        this.updateZoomDisplay();
+        // Recalculate the optimal zoom that fits everyone, then reset to it
+        this.calculateOptimalZoom();
     }
 
     calculateOptimalZoom() {
@@ -1674,9 +1669,6 @@ class TeamManager {
         const orgChart = grid.querySelector('.org-chart');
         
         if (!container || !grid || !orgChart) return;
-
-        // Keep baseZoomLevel always at 1.0 (true 100%)
-        this.baseZoomLevel = 1.0;
 
         // Get container dimensions
         const containerWidth = container.clientWidth;
@@ -1691,11 +1683,16 @@ class TeamManager {
         const zoomX = (containerWidth - padding * 2) / chartWidth;
         const zoomY = (containerHeight - padding * 2) / chartHeight;
         
-        // Use the smaller zoom to ensure everything fits, but don't zoom in beyond 100%
+        // Use the smaller zoom to ensure everything fits
+        // Cap at 1.0 (don't zoom in beyond actual size)
         const optimalZoom = Math.min(zoomX, zoomY, 1.0);
         
-        // Set the zoom to fit the chart initially (but baseZoomLevel stays at 1.0)
-        this.zoomLevel = optimalZoom;
+        // Store this as the base zoom level (100% = view that shows everyone)
+        // This represents the "fit to view" zoom level
+        this.baseZoomLevel = optimalZoom;
+        
+        // Set the zoom to the base level (the view that shows everyone)
+        this.zoomLevel = this.baseZoomLevel;
         
         // Calculate the scaled dimensions
         const scaledWidth = chartWidth * this.zoomLevel;
@@ -1703,7 +1700,6 @@ class TeamManager {
         
         // Center the chart horizontally
         // Since the grid is positioned at left: 50%, panX = 0 means centered
-        // We'll use transform to center it initially
         this.panX = 0;
         
         // Center the chart vertically if it's smaller than the container
