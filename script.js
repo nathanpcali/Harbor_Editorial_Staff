@@ -1675,6 +1675,9 @@ class TeamManager {
         
         if (!container || !grid || !orgChart) return;
 
+        // Keep baseZoomLevel always at 1.0 (true 100%)
+        this.baseZoomLevel = 1.0;
+
         // Get container dimensions
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
@@ -1688,17 +1691,11 @@ class TeamManager {
         const zoomX = (containerWidth - padding * 2) / chartWidth;
         const zoomY = (containerHeight - padding * 2) / chartHeight;
         
-        // Use the smaller zoom to ensure everything fits
-        const optimalZoom = Math.min(zoomX, zoomY, 1); // Don't zoom in beyond 100%
+        // Use the smaller zoom to ensure everything fits, but don't zoom in beyond 100%
+        const optimalZoom = Math.min(zoomX, zoomY, 1.0);
         
-        // Make it 25% bigger for the base zoom (100% view)
-        const adjustedZoom = optimalZoom * 1.25;
-        
-        // Store this as the base zoom (100% view)
-        this.baseZoomLevel = Math.max(0.2, Math.min(adjustedZoom, 1)); // Cap at 1.0
-        
-        // Set the zoom to the base level and center the chart
-        this.zoomLevel = this.baseZoomLevel;
+        // Set the zoom to fit the chart initially (but baseZoomLevel stays at 1.0)
+        this.zoomLevel = optimalZoom;
         
         // Calculate the scaled dimensions
         const scaledWidth = chartWidth * this.zoomLevel;
